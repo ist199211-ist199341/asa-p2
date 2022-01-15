@@ -9,11 +9,10 @@ digraph {
 		v5
 	}
 	subgraph 2 {
-		node [color=blue style=filled]
+		node [color=green style=filled]
 		v6
 	}
 	v7
-	v8
 	v1 -> v2
 	v1 -> v3
 	v2 -> v6

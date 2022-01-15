@@ -15,7 +15,7 @@ a = (sys.stdin.readline().split())
 num_vertice = int(a[0])
 num_edges = int(a[1])
 
-for i in range(1, num_edges):
+for i in range(1, num_vertice):
     if (i == vertice1):
         with dot.subgraph(name="1") as c:
             c.node_attr['fillcolor'] = 'red'
@@ -24,7 +24,7 @@ for i in range(1, num_edges):
     else:
         if(i == vertice2):
             with dot.subgraph(name="2") as c:
-                c.node_attr['color'] = 'blue'
+                c.node_attr['color'] = 'green'
                 c.node_attr['style'] = 'filled'
                 c.node(str("v" + str(i)))
         else:
