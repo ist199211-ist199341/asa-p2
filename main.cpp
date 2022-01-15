@@ -13,8 +13,13 @@ typedef struct
 } node;
 
 std::vector<int> all_possible;
-
+/*
+call all the parents of the node
+*/
 void go_up(int current, int target, node *all_nodes);
+/*
+goes to the sons of the node and check if they are equal to the target
+*/
 bool go_down(int original, int current, int target, node *all_nodes);
 
 int main()
@@ -61,7 +66,7 @@ int main()
 
         c = getchar();
     }
-
+    // needs to make to both vertices
     go_up(vertice1, vertice2, tree);
     go_up(vertice2, vertice1, tree);
 
@@ -86,9 +91,11 @@ void go_up(int current, int target, node *all_nodes)
 
     for (int above : all_nodes[current].parents)
     {
+        // add number to vector
         if (go_down(current, above, target, all_nodes) == true)
         {
             all_possible.push_back(above);
+            // return because the above are not the closest
             return;
         }
         go_up(above, target, all_nodes);
@@ -96,13 +103,17 @@ void go_up(int current, int target, node *all_nodes)
 }
 bool go_down(int original, int current, int target, node *all_nodes)
 {
+    // it means that it went up and got down to the same node, it would give a bad output if not taken into consideration
     if (original == current)
         return false;
 
+    // if they are equal, that means that we can reach the other vertice by the same node
     if (current == target)
     {
         return true;
     }
+
+    // visit sons
     for (int i = 0; i < NUM_CHILD; i++)
     {
         if (all_nodes[current].son[i] != -1)
