@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string.h>
-#include <sstream>
+#include <bits/stdc++.h>
 
 #define NUM_CHILD 2
 
@@ -12,10 +12,10 @@ typedef struct
     int son[NUM_CHILD];
 } node;
 
-std::vector<int> order1;
-std::vector<int> order2;
+std::vector<int> all_possible;
 
-void search(int vertice1, node *all_nodes);
+void go_up(int current, int target, node *all_nodes);
+bool go_down(int original, int current, int target, node *all_nodes);
 
 int main()
 {
@@ -62,23 +62,52 @@ int main()
         c = getchar();
     }
 
-    search(vertice1, tree);
-    search(vertice2, tree);
+    go_up(vertice1, vertice2, tree);
+    go_up(vertice2, vertice1, tree);
 
-    for (int num : order1)
+    if (all_possible.empty())
+        printf("-");
+    else
     {
-        printf("%d ", num);
+        sort(all_possible.begin(), all_possible.end());
+
+        for (int value : all_possible)
+        {
+            printf("%d ", value);
+        }
     }
     printf("\n");
 
     return 0;
 }
-void search(int vertice1, node *all_nodes)
-{
-    order1.push_back(vertice1);
 
-    for (int parent : all_nodes[vertice1].parents)
+void go_up(int current, int target, node *all_nodes)
+{
+
+    for (int above : all_nodes[current].parents)
     {
-        search(parent, all_nodes);
+        if (go_down(current, above, target, all_nodes) == true)
+        {
+            all_possible.push_back(above);
+            return;
+        }
+        go_up(above, target, all_nodes);
     }
+}
+bool go_down(int original, int current, int target, node *all_nodes)
+{
+    if (original == current)
+        return false;
+
+    if (current == target)
+    {
+        return true;
+    }
+    for (int i = 0; i < NUM_CHILD; i++)
+    {
+        if (all_nodes[current].son[i] != -1)
+            if (go_down(original, all_nodes[current].son[i], target, all_nodes) == true)
+                return true;
+    }
+    return false;
 }
