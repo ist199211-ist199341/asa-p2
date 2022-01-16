@@ -3,7 +3,7 @@
 #include <string.h>
 #include <bits/stdc++.h>
 
-#define NUM_CHILD 2
+#define NUM_PARENT 2
 
 typedef struct
 {
@@ -27,9 +27,9 @@ int main()
     int node1_i, node2_i, num_vertices, num_edges;
     std::cin >> node1_i >> node2_i >> num_vertices >> num_edges;
 
-    node tree[num_vertices];
+    node tree[num_vertices + 1];
 
-    for (int i = 0; i < num_vertices; ++i)
+    for (int i = 1; i < num_vertices + 1; ++i)
     {
         node new_node;
         new_node.self = i;
@@ -46,7 +46,7 @@ int main()
         tree[start].children.insert(stop);
         tree[stop].parents.insert(start);
 
-        if (tree[stop].parents.size() > 2)
+        if (tree[stop].parents.size() > NUM_PARENT)
         {
             // a node cannot have more than 2 parents, invalid tree
             std::cout << 0 << std::endl;
@@ -86,7 +86,10 @@ void go_up(int current, int target, node *all_nodes)
             // return because the above are not the closest
             return;
         }
-        go_up(above, target, all_nodes);
+        else
+        {
+            go_up(above, target, all_nodes);
+        }
     }
 }
 
