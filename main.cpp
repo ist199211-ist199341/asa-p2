@@ -10,32 +10,38 @@ typedef struct
     int self;
     std::set<int> parents;
     std::set<int> children;
-} node;
+} node_t;
 
-std::set<int> all_possible;
-/*
-call all the parents of the node
-*/
-void go_up(int current, int target, node *all_nodes);
-/*
-goes to the children of the node and check if they are equal to the target
-*/
-bool go_down(int original, int current, int target, node *all_nodes);
+typedef enum color
+{
+    WHITE,
+    GRAY,
+    BLACK
+} color_t;
+
+typedef struct
+{
+    color_t color;
+    int distance;
+    int pi;
+    node_t *node;
+} bfs_node;
+
+std::set<int> *get_reachable_nodes(int start_node, int node_count, node_t *tree);
+void strip_parents(int start_node, std::set<int> *set, node_t *tree);
 
 int main()
 {
     int node1_i, node2_i, num_vertices, num_edges;
     std::cin >> node1_i >> node2_i >> num_vertices >> num_edges;
 
-    node tree[num_vertices];
+    node_t tree[num_vertices];
 
     for (int i = 0; i < num_vertices; ++i)
     {
-        node new_node;
-        new_node.self = i;
-        new_node.parents = std::set<int>();
-        new_node.children = std::set<int>();
-        tree[i] = new_node;
+        tree[i].self = i;
+        tree[i].parents = std::set<int>();
+        tree[i].children = std::set<int>();
     }
 
     for (int i = 0; i < num_edges; ++i)
@@ -43,10 +49,10 @@ int main()
         int start, stop;
         std::cin >> start >> stop;
 
-        tree[start].children.insert(stop);
-        tree[stop].parents.insert(start);
+        tree[start - 1].children.insert(stop - 1);
+        tree[stop - 1].parents.insert(start - 1);
 
-        if (tree[stop].parents.size() > 2)
+        if (tree[stop - 1].parents.size() > 2)
         {
             // a node cannot have more than 2 parents, invalid tree
             std::cout << 0 << std::endl;
@@ -54,19 +60,33 @@ int main()
         }
     }
 
-    // needs to make to both vertices
-    go_up(node1_i, node2_i, tree);
-    go_up(node2_i, node1_i, tree);
+    // execute "reverse" BFS
+    std::set<int> *v1_parents = get_reachable_nodes(node1_i - 1, num_vertices, tree);
+    std::set<int> *v2_parents = get_reachable_nodes(node2_i - 1, num_vertices, tree);
+    std::set<int> common_parents;
 
-    if (all_possible.empty())
+    // find the common parents
+    for (int el : *v1_parents)
+    {
+        if (v2_parents->count(el) > 0)
+        {
+            common_parents.insert(el);
+        }
+    }
+    for (int el : common_parents)
+    {
+        strip_parents(el, &common_parents, tree);
+    }
+
+    if (common_parents.empty())
     {
         std::cout << "-";
     }
     else
     {
-        for (int value : all_possible)
+        for (int value : common_parents)
         {
-            std::cout << value << ' ';
+            std::cout << value + 1 << ' ';
         }
     }
     std::cout << std::endl;
@@ -74,39 +94,65 @@ int main()
     return 0;
 }
 
-void go_up(int current, int target, node *all_nodes)
+std::set<int> *get_reachable_nodes(int start_node, int node_count, node_t *tree)
 {
+    bfs_node nodes[node_count];
 
-    for (int above : all_nodes[current].parents)
+    // init bfs_nodes
+    for (int i = 0; i < node_count; ++i)
     {
-        // add number to vector
-        if (go_down(current, above, target, all_nodes))
-        {
-            all_possible.insert(above);
-            // return because the above are not the closest
-            return;
-        }
-        go_up(above, target, all_nodes);
+        nodes[i].color = WHITE;
+        nodes[i].distance = -1;
+        nodes[i].pi = -1;
+        nodes[i].node = tree + i;
     }
+    nodes[start_node].color = GRAY;
+    nodes[start_node].distance = 0;
+
+    // apply bfs_algorithm
+    std::queue<int> queue;
+    queue.push(start_node);
+
+    while (!queue.empty())
+    {
+        int node_i = queue.front();
+        queue.pop();
+
+        for (int parent : nodes[node_i].node->parents)
+        {
+            if (nodes[parent].color == WHITE)
+            {
+                nodes[parent].color = GRAY;
+                nodes[parent].distance = nodes[node_i].distance + 1;
+                nodes[parent].pi = node_i;
+                queue.push(parent);
+            }
+        }
+        nodes[node_i].color = BLACK;
+    }
+
+    std::set<int> *reached_nodes = new std::set<int>;
+
+    for (int i = 0; i < node_count; ++i)
+    {
+        if (nodes[i].distance >= 0)
+        {
+            reached_nodes->insert(i);
+        }
+    }
+
+    return reached_nodes;
 }
 
-bool go_down(int original, int current, int target, node *all_nodes)
+void strip_parents(int start_node, std::set<int> *set, node_t *tree)
 {
-    // it means that it went up and got down to the same node, it would give a bad output if not taken into consideration
-    if (original == current)
-        return false;
-
-    // if they are equal, that means that we can reach the other vertice by the same node
-    if (current == target)
+    for (int parent : tree[start_node].parents)
     {
-        return true;
+        auto set_it = set->find(parent);
+        if (set_it != set->end())
+        {
+            set->erase(set_it);
+        }
+        strip_parents(parent, set, tree);
     }
-
-    // visit sons
-    for (int child : all_nodes[current].children)
-    {
-        if (go_down(original, child, target, all_nodes))
-            return true;
-    }
-    return false;
 }
