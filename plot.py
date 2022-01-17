@@ -1,6 +1,5 @@
 import os
 import sys
-from graphviz import Digraph
 import graphviz
 
 # *****************************************************************
