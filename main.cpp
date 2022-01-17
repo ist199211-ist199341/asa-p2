@@ -3,13 +3,11 @@
 #include <set>
 #include <string.h>
 
-#define NUM_CHILD 2
+#define NUM_PARENTS 2
 
 typedef struct
 {
-    int self;
-    std::set<int> parents;
-    std::set<int> children;
+    int parents[NUM_PARENTS];
 } node_t;
 
 typedef enum color
@@ -27,31 +25,26 @@ typedef struct
     node_t *node;
 } bfs_node;
 
-typedef struct
-{
-    color_t color;
-    int discovery;
-    int closure;
-    node_t *node;
-} dfs_node;
+bool try_insert_array(int *arr, int element, size_t arr_size);
 
 std::set<int> *get_reachable_nodes(int start_node, int node_count, node_t *tree);
 void strip_parents(int start_node, std::set<int> *set, node_t *tree);
 bool has_loops(int node_count, node_t *tree);
-bool dfs_visit_loop_check(dfs_node *nodes, int current_node, int *time);
+bool dfs_visit_loop_check(color_t *node_colors, node_t *tree, int current_node);
 
 int main()
 {
     int node1_i, node2_i, num_vertices, num_edges;
     std::cin >> node1_i >> node2_i >> num_vertices >> num_edges;
 
-    node_t tree[num_vertices];
+    node_t *tree = (node_t *)malloc(num_vertices * sizeof(node_t));
 
     for (int i = 0; i < num_vertices; ++i)
     {
-        tree[i].self = i;
-        tree[i].parents = std::set<int>();
-        tree[i].children = std::set<int>();
+        for (int j = 0; j < NUM_PARENTS; ++j)
+        {
+            tree[i].parents[j] = -1;
+        }
     }
 
     for (int i = 0; i < num_edges; ++i)
@@ -59,10 +52,7 @@ int main()
         int start, stop;
         std::cin >> start >> stop;
 
-        tree[start - 1].children.insert(stop - 1);
-        tree[stop - 1].parents.insert(start - 1);
-
-        if (tree[stop - 1].parents.size() > 2)
+        if (!try_insert_array(tree[stop - 1].parents, start - 1, NUM_PARENTS))
         {
             // a node cannot have more than 2 parents, invalid tree
             std::cout << 0 << std::endl;
@@ -110,9 +100,22 @@ int main()
     return 0;
 }
 
+bool try_insert_array(int *arr, int element, size_t arr_size)
+{
+    for (size_t i = 0; i < arr_size; ++i)
+    {
+        if (arr[i] == -1)
+        {
+            arr[i] = element;
+            return true;
+        }
+    }
+    return false;
+}
+
 std::set<int> *get_reachable_nodes(int start_node, int node_count, node_t *tree)
 {
-    bfs_node nodes[node_count];
+    bfs_node *nodes = (bfs_node *)malloc(node_count * sizeof(bfs_node));
 
     // init bfs_nodes
     for (int i = 0; i < node_count; ++i)
@@ -136,6 +139,8 @@ std::set<int> *get_reachable_nodes(int start_node, int node_count, node_t *tree)
 
         for (int parent : nodes[node_i].node->parents)
         {
+            if (parent == -1)
+                break;
             if (nodes[parent].color == WHITE)
             {
                 nodes[parent].color = GRAY;
@@ -164,6 +169,8 @@ void strip_parents(int start_node, std::set<int> *set, node_t *tree)
 {
     for (int parent : tree[start_node].parents)
     {
+        if (parent == -1)
+            break;
         auto set_it = set->find(parent);
         if (set_it != set->end())
         {
@@ -175,22 +182,18 @@ void strip_parents(int start_node, std::set<int> *set, node_t *tree)
 
 bool has_loops(int node_count, node_t *tree)
 {
-    dfs_node nodes[node_count];
-    int time = 0;
+    color_t *node_colors = (color_t *)malloc(node_count * sizeof(color_t));
 
     // initialize DFS nodes
     for (int i = 0; i < node_count; ++i)
     {
-        nodes[i].color = WHITE;
-        nodes[i].discovery = 0;
-        nodes[i].closure = 0;
-        nodes[i].node = tree + i;
+        node_colors[i] = WHITE;
     }
 
     for (int i = 0; i < node_count; ++i)
     {
-        if (nodes[i].color == WHITE)
-            if (dfs_visit_loop_check(nodes, i, &time))
+        if (node_colors[i] == WHITE)
+            if (dfs_visit_loop_check(node_colors, tree, i))
             {
                 return true;
             }
@@ -198,30 +201,26 @@ bool has_loops(int node_count, node_t *tree)
     return false;
 }
 
-bool dfs_visit_loop_check(dfs_node *nodes, int current_node, int *time)
+bool dfs_visit_loop_check(color_t *node_colors, node_t *tree, int current_node)
 {
-    *time += 1;
-    dfs_node *node = &nodes[current_node];
-    node->discovery = *time;
-    node->color = GRAY;
-    for (int adj_i : node->node->parents)
+    node_colors[current_node] = GRAY;
+    for (int adj_i : tree[current_node].parents)
     {
-        dfs_node *adj = &nodes[adj_i];
-        if (adj->color == WHITE)
+        if (adj_i == -1)
+            break;
+        if (node_colors[adj_i] == WHITE)
         {
-            if (dfs_visit_loop_check(nodes, adj_i, time))
+            if (dfs_visit_loop_check(node_colors, tree, adj_i))
             {
                 return true;
             }
         }
-        else if (adj->color == GRAY)
+        else if (node_colors[adj_i] == GRAY)
         {
             // detected a loop!
             return true;
         }
     }
-    *time += 1;
-    node->closure = *time;
-    node->color = BLACK;
+    node_colors[current_node] = BLACK;
     return false;
 }
