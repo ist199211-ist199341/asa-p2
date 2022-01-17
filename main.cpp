@@ -1,7 +1,7 @@
 #include <iostream>
+#include <queue>
 #include <set>
 #include <string.h>
-#include <bits/stdc++.h>
 
 #define NUM_CHILD 2
 
@@ -27,8 +27,18 @@ typedef struct
     node_t *node;
 } bfs_node;
 
+typedef struct
+{
+    color_t color;
+    int discovery;
+    int closure;
+    node_t *node;
+} dfs_node;
+
 std::set<int> *get_reachable_nodes(int start_node, int node_count, node_t *tree);
 void strip_parents(int start_node, std::set<int> *set, node_t *tree);
+bool has_loops(int node_count, node_t *tree);
+bool dfs_visit_loop_check(dfs_node *nodes, int current_node, int *time);
 
 int main()
 {
@@ -58,6 +68,12 @@ int main()
             std::cout << 0 << std::endl;
             return 0;
         }
+    }
+
+    if (has_loops(num_vertices, tree))
+    {
+        std::cout << 0 << std::endl;
+        return 0;
     }
 
     // execute "reverse" BFS
@@ -155,4 +171,57 @@ void strip_parents(int start_node, std::set<int> *set, node_t *tree)
         }
         strip_parents(parent, set, tree);
     }
+}
+
+bool has_loops(int node_count, node_t *tree)
+{
+    dfs_node nodes[node_count];
+    int time = 0;
+
+    // initialize DFS nodes
+    for (int i = 0; i < node_count; ++i)
+    {
+        nodes[i].color = WHITE;
+        nodes[i].discovery = 0;
+        nodes[i].closure = 0;
+        nodes[i].node = tree + i;
+    }
+
+    for (int i = 0; i < node_count; ++i)
+    {
+        if (nodes[i].color == WHITE)
+            if (dfs_visit_loop_check(nodes, i, &time))
+            {
+                return true;
+            }
+    }
+    return false;
+}
+
+bool dfs_visit_loop_check(dfs_node *nodes, int current_node, int *time)
+{
+    *time += 1;
+    dfs_node *node = &nodes[current_node];
+    node->discovery = *time;
+    node->color = GRAY;
+    for (int adj_i : node->node->parents)
+    {
+        dfs_node *adj = &nodes[adj_i];
+        if (adj->color == WHITE)
+        {
+            if (dfs_visit_loop_check(nodes, adj_i, time))
+            {
+                return true;
+            }
+        }
+        else if (adj->color == GRAY)
+        {
+            // detected a loop!
+            return true;
+        }
+    }
+    *time += 1;
+    node->closure = *time;
+    node->color = BLACK;
+    return false;
 }
