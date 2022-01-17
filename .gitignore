@@ -1,0 +1,10 @@
+doctest-output/
+tests/
+.vscode/
+
+src/main
+
+randGeneoTree
+randGeneoTree.cpp
+
+*.txt
