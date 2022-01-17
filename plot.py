@@ -8,6 +8,10 @@ import graphviz
 # Diogo Correia - 99211 Tomás Esteves - 99341
 # ****************************************************************/
 
+# You may need to download the package:
+# - graphviz
+# https://graphviz.readthedocs.io/en/stable/manual.html#installation
+
 # To create the DAG, just run at the terminal:
 #               python plot.py < file
 # Where file is the input with the format used in the Project
