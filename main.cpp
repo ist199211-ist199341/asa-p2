@@ -34,6 +34,7 @@ bool dfs_visit_loop_check(color_t *node_colors, node_t *tree, int current_node);
 
 int main()
 {
+    std::ios::sync_with_stdio(false);
     int node1_i, node2_i, num_vertices, num_edges;
     std::cin >> node1_i >> node2_i >> num_vertices >> num_edges;
 
@@ -49,10 +50,10 @@ int main()
 
     for (int i = 0; i < num_edges; ++i)
     {
-        int start, stop;
+        int start = -1, stop = -1;
         std::cin >> start >> stop;
 
-        if (!try_insert_array(tree[stop - 1].parents, start - 1, NUM_PARENTS))
+        if (start == -1 || stop == -1 || !try_insert_array(tree[stop - 1].parents, start - 1, NUM_PARENTS))
         {
             // a node cannot have more than 2 parents, invalid tree
             std::cout << 0 << std::endl;
