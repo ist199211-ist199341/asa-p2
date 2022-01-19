@@ -8,6 +8,7 @@
 typedef struct
 {
     int parents[NUM_PARENTS];
+    int children_count;
 } node_t;
 
 typedef enum color
@@ -45,6 +46,7 @@ int main()
         for (int j = 0; j < NUM_PARENTS; ++j)
         {
             tree[i].parents[j] = -1;
+            tree[i].children_count = 0;
         }
     }
 
@@ -59,6 +61,7 @@ int main()
             std::cout << 0 << std::endl;
             return 0;
         }
+        ++tree[start - 1].children_count;
     }
 
     if (has_loops(num_vertices, tree))
@@ -73,16 +76,37 @@ int main()
     std::set<int> common_parents;
 
     // find the common parents
-    for (int el : *v1_parents)
+    //for (int el : *v1_parents)
+    for (int el = 0; el < num_vertices; ++el)
     {
-        if (v2_parents->count(el) > 0)
+        if (v1_parents->count(el) > 0 && v2_parents->count(el) > 0)
         {
             common_parents.insert(el);
         }
+        else
+        {
+            for (int i = 0; i < NUM_PARENTS; ++i)
+            {
+                if (tree[el].parents[i] == -1)
+                    break;
+                --tree[tree[el].parents[i]].children_count;
+            }
+        }
     }
-    for (int el : common_parents)
+    /*for (int el : common_parents)
     {
         strip_parents(el, &common_parents, tree);
+    }*/
+    for (auto it = common_parents.begin(); it != common_parents.end();)
+    {
+        if (tree[*it].children_count != 0)
+        {
+            it = common_parents.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
     }
 
     if (common_parents.empty())
