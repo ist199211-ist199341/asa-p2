@@ -35,6 +35,7 @@
 
   Para resolver o \textbf{problema} utilizou-se uma lista de nós, um nó é composto pelo o número dos pais, o número de filhos e o número de vezes que foi visitado.
   Para verificar que o input dado é uma árvore geneológica fazemos o seguinte:
+  
   \begin{itemize}
     \setlength{\itemsep}{0pt}
       \item Ao ler o input se um nó tem mais de 2 pais.
@@ -42,30 +43,34 @@
   \end{itemize}
 
   Se um destes requesitos é preenchido, o programa escreve "0" e termina.
-
   Depois do input ser tratado, são feitas 2 BFS, uma para cada um dos nós para os quais se quer detetar os ancestrais comuns mais próximos.
-
   Assim vamos apenas tratar dos nós que foram visitados 2 vezes, alcançáveis por ambas as BFS.
-  
   Agora basta imprimir os nós que restam e que não têm filhos.
-
   Se não houver nenhum elemento que cumpre estes requesitos, o programa escreve "-".
 
   \section{Análise Teórica}
 
   Seja $V$ o número de nós e $E$ o número de arestas.
 
-  No problema começamos por ler os vértices para os quais se quer detetar os ancestrais comuns mais próximos, assim como o número de nós e o número de arestas.
-  De seguida alocamos dinamicamente memória para lista de nós e a inicializamos $O(V)$.
-  Acabamos por depois adicionar a informação relativa aos vértices $O(E)$.
+  \begin{itemize}
+    \setlength{\itemsep}{0pt}
+    \item No problema começamos por ler os vértices para os quais se quer detetar os ancestrais comuns mais próximos, assim como o número de nós e o número de arestas:
+    \begin{itemize}
+      \setlength{\itemsep}{0pt}
+      \item De seguida alocamos dinamicamente memória para lista de nós e a inicializamos $O(V)$.
+      \item Acabamos por depois adicionar a informação relativa aos vértices $O(E)$.
+    \end{itemize}
 
-  É efetuada uma DFS $O(V + E)$.
+   \item É efetuada uma DFS $O(V + E)$.
 
-  São efetuadas 2 BFS $O(V + E)$.
+  \item São efetuadas 2 BFS $O(V + E)$.
 
-  Remover nós que não são comuns a ambas as BFS $O(V)$.
+  \item Remover nós que não são comuns a ambas as BFS $O(V)$.
 
-  Imprimir todos os nós que são ancestrais comuns mais próximos $O(V)$.
+  \item Imprimir todos os nós que são ancestrais comuns mais próximos $O(V)$.
+  \end{itemize}
+
+  
   
   Logo, no pior caso tem-se $O(V + E)$.
 
