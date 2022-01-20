@@ -33,20 +33,19 @@
 \begin{document}
   \section{Descrição do Problema e da Solução}
 
-  Para resolver o \textbf{problema} utilizou-se uma lista de nós, um nó é composto pelo o número dos pais, o número de filhos e o número de vezes que foi visitado.
-  Para verificar que o input dado é uma árvore geneológica fazemos o seguinte:
+  Para resolver o \textbf{problema} utilizou-se uma lista de nós, um nó é composto pelo o número dos pais, o número de filhos e o número de vezes que foi visitado.\\
+  Para verificar que o input dado é uma árvore geneológica é feito o seguinte:
   
   \begin{itemize}
     \setlength{\itemsep}{0pt}
-      \item Ao ler o input se um nó tem mais de 2 pais.
-      \item Depois de ser lido o input todo, realiza-se uma DFS e no caso de se detetar que existe uma aresta que toca num nó já aberto mais ainda não fechado (GREY), sabemos que existe um loop.
+      \item Ao ler o input verifica-se se um nó tem mais de 2 pais.
+      \item Depois de ser lido o input todo, realiza-se uma DFS e no caso de se detetar que existe uma aresta que toca num nó já aberto mais ainda não fechado (GREY), sabe-se que existe um loop.
   \end{itemize}
-
-  Se um destes requesitos é preenchido, o programa escreve "0" e termina.
+  Se um dos requisitos for preenchido, o programa escreve "0" e termina.\\
   Depois do input ser tratado, são feitas 2 BFS, uma para cada um dos nós para os quais se quer detetar os ancestrais comuns mais próximos.
-  Assim vamos apenas tratar dos nós que foram visitados 2 vezes, alcançáveis por ambas as BFS.
-  Agora basta imprimir os nós que restam e que não têm filhos.
-  Se não houver nenhum elemento que cumpre estes requesitos, o programa escreve "-".
+  Eliminam-se os nós que não pertencem a ambas as BFS.
+  E finalemente escreve-se por ordem crescente os nós restantes que não têm filhos.\\
+ Se nenhum elemento for escrito, o programa escreve "-" e termina.
 
   \section{Análise Teórica}
 
@@ -54,42 +53,32 @@
 
   \begin{itemize}
     \setlength{\itemsep}{0pt}
-    \item No problema começamos por ler os vértices para os quais se quer detetar os ancestrais comuns mais próximos, assim como o número de nós e o número de arestas:
+    \item No problema começa-se por ler os vértices para os quais se quer detetar os ancestrais comuns mais próximos, assim como o número de nós e o número de arestas, feito em tempo constante, logo $\Theta(1)$:
     \begin{itemize}
       \setlength{\itemsep}{0pt}
-      \item De seguida alocamos dinamicamente memória para lista de nós e a inicializamos $O(V)$.
-      \item Acabamos por depois adicionar a informação relativa aos vértices $O(E)$.
+      \item De seguida aloca-se dinamicamente memória para lista de nós e é inicializada. Logo, $\Theta(V)$.
+      \item Acaba-se por depois tratar da informação relativa aos vértices. Logo, $\Theta(E)$.
     \end{itemize}
 
-   \item É efetuada uma DFS $O(V + E)$.
+   \item É efetuada uma DFS. Logo, $O(V + E)$.
 
-  \item São efetuadas 2 BFS $O(V + E)$.
+  \item São efetuadas 2 BFS. Logo, $O(V + E)$.
 
-  \item Remover nós que não são comuns a ambas as BFS $O(V)$.
+  \item Remover nós que não são comuns a ambas as BFS. Logo, $O(V)$.
 
-  \item Imprimir todos os nós que são ancestrais comuns mais próximos $O(V)$.
+  \item Imprimir todos os nós que são ancestrais comuns mais próximos. Logo $\Theta(V)$.
   \end{itemize}
-
-  
-  
-  Logo, no pior caso tem-se $O(V + E)$.
-
-O problema tem complexidade espacial $O(V)$, visto que se utilizou apenas uma lista de tamanho dos números de nós.
+  Logo, no pior caso tem-se $O(V + E)$.\\
+  O problema tem complexidade espacial $O(V)$, visto que se utilizou apenas uma lista de tamanho dos números de nós.
 
   \section{Avaliação Experimental dos Resultados}
 
-  O programa foi executado, pelo menos 5 vezes para cada sequência, para ambos os problemas, recorrendo ao programa \href{https://github.com/sharkdp/hyperfine}{\textit{hyperfine}}.
-
-  \begin{wrapfigure}{r}{0.4\textwidth}
-    \centering
+  Foi criado instâncias de input com probablidade de criar aresta de 99\% (piot caso), para valores de nós entre 10 e 1000000, qnts por ordem de grandeza (?).\\
+  O programa foi executado, pelo menos 100 (?) vezes para cada input, recorrendo ao programa \href{https://github.com/sharkdp/hyperfine}{\textit{hyperfine}}.
     
-  \end{wrapfigure}
-
-  Para o problema 2, por ser o pior caso e para simplificar a análise, tomou-se sempre $N = M$, ou seja, o mesmo número de elementos para ambas as sequências.
-  Foram sempre utilizados números comuns, visto que esse é o pior caso no problema 2.
-  Foram utilizadas sequências de tamanho entre 10 e 100 000 elementos, 100 para cada ordem de grandeza.
-  O gráfico apresentado à direta tem uma escala $NM$ no eixo dos $xx$.
-  Os dados revelam uma reta linear, comprovando que a complexidade temporal do problema é, num caso geral, $O(NM)$, tal como concluído na análise teórica.
+  \includegraphics[width=1\textwidth]{report.png}
+  O gráfico apresentadotem uma escala $V + E$ no eixo dos $xx$ e segs no eixo dos $yy$.\\
+  Os dados revelam uma reta (relativamente) linear, comprovando que a complexidade temporal do problema é, num caso geral, $O(V + E)$, tal como concluído na análise teórica.
 
 
 
