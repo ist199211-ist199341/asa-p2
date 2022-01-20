@@ -43,7 +43,8 @@
   \end{itemize}
   Se um dos requisitos for preenchido, o programa escreve "0" e termina.\\
   Depois do input ser tratado, são feitas 2 BFS, uma para cada um dos nós para os quais se quer detetar os ancestrais comuns mais próximos.
-  Eliminam-se os nós que não pertencem a ambas as BFS.
+  Eliminam-se os nós que não pertencem a ambas as BFS.\\
+  Explicar pq isto acontece\\
   E finalemente escreve-se por ordem crescente os nós restantes que não têm filhos.\\
  Se nenhum elemento for escrito, o programa escreve "-" e termina.
 
@@ -56,8 +57,8 @@
     \item No problema começa-se por ler os vértices para os quais se quer detetar os ancestrais comuns mais próximos, assim como o número de nós e o número de arestas, feito em tempo constante, logo $\Theta(1)$:
     \begin{itemize}
       \setlength{\itemsep}{0pt}
-      \item De seguida aloca-se dinamicamente memória para lista de nós e é inicializada. Logo, $\Theta(V)$.
-      \item Acaba-se por depois tratar da informação relativa aos vértices. Logo, $\Theta(E)$.
+      \item De seguida aloca-se dinamicamente memória para lista de nós e é inicializada. Logo, $\Theta(V)$ ou $\Theta(1)$.
+      \item Acaba-se por depois tratar da informação relativa aos vértices. Logo, $O(E)$.
     \end{itemize}
 
    \item É efetuada uma DFS. Logo, $O(V + E)$.
@@ -77,9 +78,7 @@
   O programa foi executado, pelo menos 100 (?) vezes para cada input, recorrendo ao programa \href{https://github.com/sharkdp/hyperfine}{\textit{hyperfine}}.
     
   \includegraphics[width=1\textwidth]{report.png}
-  O gráfico apresentadotem uma escala $V + E$ no eixo dos $xx$ e segs no eixo dos $yy$.\\
+  O gráfico apresentadotem uma escala $V + E$ no eixo dos $xx$ e o tempo em segundos no eixo dos $yy$.\\
   Os dados revelam uma reta (relativamente) linear, comprovando que a complexidade temporal do problema é, num caso geral, $O(V + E)$, tal como concluído na análise teórica.
-
-
 
 \end{document}
