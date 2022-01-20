@@ -55,6 +55,9 @@ dkms.conf
 *.txt
 *.vscode
 
+# Tests
+tests/
+
 # Output
 src/main
 
