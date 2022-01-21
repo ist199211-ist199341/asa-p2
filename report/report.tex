@@ -7,6 +7,7 @@
 \usepackage{wrapfig}
 \usepackage{blindtext}
 \usepackage{hyperref}
+\usepackage{tikz}
 
 \graphicspath{ {./} }
 \hypersetup{
@@ -33,15 +34,43 @@
 \begin{document}
   \section{Descrição do Problema e da Solução}
 
-  Para resolver o \textbf{problema} utilizou-se uma lista de nós, um nó é composto pelo o número dos pais, o número de filhos e o número de vezes que foi visitado.\\
-  Para verificar que o input dado é uma árvore geneológica é feito o seguinte:
+  Pretende-se encontrar, dada uma árvore geneológica e dois nós, os ancestrais comuns mais próximos de ambos os nós.
+
+  Para resolver o \textbf{problema} utilizou-se uma lista de nós.
+  Um nó é composto pela identificação dos seus pais, o número de filhos que tem.
+  Para otimizar a utilização de memória, apenas é guardado o número de filhos, não quais são, visto que estes não são necessários à resolução do problema.
+  Ao decorrer da solução, trabalhamos maioritariamente no grafo transposto, que tem a vantagem de cada nó ter, no máximo, dois arcos.
+
+  O primeiro passo é verificar que o input dado é uma árvore geneológica válida.
+  Para tal, é feito o seguinte:
   
   \begin{itemize}
     \setlength{\itemsep}{0pt}
-      \item Ao ler o input verifica-se se um nó tem mais de 2 pais.
-      \item Depois de ser lido o input todo, realiza-se uma DFS e no caso de se detetar que existe uma aresta que toca num nó já aberto mais ainda não fechado (GREY), sabe-se que existe um loop.
+      \item Ao ler o input verifica-se se um nó tem mais de 2 pais. Caso tenha, a árvore é inválida.
+      \item Depois de ser lido o input todo, realiza-se uma DFS e no caso de se detetar que existe uma aresta que toca num nó já aberto mais ainda não fechado (\texttt{GREY}), sabe-se que existe um loop, pelo que a árvore é inválida.
   \end{itemize}
-  Se um dos requisitos for preenchido, o programa escreve "0" e termina.\\
+
+  Caso a árvore seja inválida, o programa escreve "\texttt{0}" e termina.
+
+  \begin{tikzpicture}[nodes={draw, circle}, ->]
+    \node (a1) at (5,7) {1};
+    \node (a2) at (5,5) {2};
+    \node (a3) at (4,3) {3};
+    \node (a4) at (6,3) {4};
+    \node (a5) at (3,1) {5};
+    \node (a6) at (7,1) {6};
+    \node (a7) at (3,5) {7};
+
+    \draw (a1) -> (a2);
+    \draw (a2) -> (a3);
+    \draw (a2) -> (a4);
+    \draw (a3) -> (a5);
+    \draw (a4) -> (a6);
+    \draw (a1) -> (a5);
+    \draw (a1) -> (a6);
+    \draw (a7) -> (a2);
+  \end{tikzpicture}
+
   Depois do input ser tratado, são feitas 2 BFS, uma para cada um dos nós para os quais se quer detetar os ancestrais comuns mais próximos.
   Eliminam-se os nós que não pertencem a ambas as BFS.\\
   Explicar pq isto acontece\\
