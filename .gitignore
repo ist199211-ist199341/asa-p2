@@ -1,10 +1,75 @@
-doctest-output/
-tests/
-.vscode/
+# Prerequisites
+*.d
 
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Linker output
+*.ilk
+*.map
+*.exp
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Kernel Module Compile Results
+*.mod*
+*.cmd
+.tmp_versions/
+modules.order
+Module.symvers
+Mkfile.old
+dkms.conf
+
+# Extras
+*.txt
+*.vscode
+
+# Tests
+tests/
+
+# Output
 src/main
 
-randGeneoTree
-randGeneoTree.cpp
-
-*.txt
+# LaTeX
+report/__latexindent_temp.tex
+report/*.aux
+report/*.fdb_latexmk
+report/*.fls
+report/*.log
+report/*.pdf
+report/*.synctex.gz
+report/*.bbl
+report/*.bcf
+report/*.blg
+report/*.xml
