@@ -51,7 +51,7 @@
   \begin{itemize}
     \setlength{\itemsep}{0pt}
       \item Ao ler o input verifica-se se um nó tem mais de 2 pais. Caso tenha, a árvore é inválida.
-      \item Depois de ser lido o input todo, realiza-se uma DFS e no caso de se detetar que existe uma aresta que toca num nó já aberto mais ainda não fechado (\texttt{GREY}), sabe-se que existe um loop, pelo que a árvore é inválida.
+      \item Depois de ser lido o input todo, realiza-se uma DFS e no caso de se detetar que existe uma aresta que toca num nó já aberto mas ainda não fechado (\texttt{GREY}), sabe-se que existe um loop, pelo que a árvore é inválida.
   \end{itemize}
 
   Caso a árvore seja inválida, o programa escreve "\texttt{0}" e termina.
@@ -171,7 +171,7 @@
 
   \item São efetuadas duas BFS para detetar os ancestrais comuns dos dois nós, incrementando o contador dos nós encontrados. Logo, $O(V + E)$.
 
-  \item Remover todas as arestas que ligam nós na árvore resultante dos ancestrais comuns. Logo, $\Theta(V)$.
+  \item Remover todas as arestas que ligam nós na árvore resultante dos ancestrais comuns a nós não comuns. Logo, $\Theta(V)$.
 
   \item Imprimir todos os nós que são ancestrais comuns mais próximos. Logo $\Theta(V)$.
   \end{itemize}
